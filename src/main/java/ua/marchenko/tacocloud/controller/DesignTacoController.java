@@ -32,7 +32,7 @@ public class DesignTacoController {
     @GetMapping
     public String showDesignForm(Model model) {
         List<Ingredient> ingredients = new ArrayList<>();
-        ingredientRepo.findAll().forEach(i -> ingredients.add(i));
+        ingredientRepo.findAll().forEach(ingredients::add);
 
         Ingredient.Type[] types = Ingredient.Type.values();
 
@@ -45,8 +45,9 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processDesign(@Valid @ModelAttribute("design") Taco tacoDesign, Errors errors, Model model) {
+    public String processDesign(@Valid @ModelAttribute("design") Taco tacoDesign, Errors errors) {
         if (errors.hasErrors()) {
+            errors.getAllErrors().forEach(e -> log.error(e.toString()));
             return "design";
         }
 
